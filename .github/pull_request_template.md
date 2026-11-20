@@ -1,42 +1,43 @@
 <!--
-Heads up: this is a template, not a collaborative product. Most
-changes belong in your fork. See CONTRIBUTING.md for which kinds of
-upstream PRs tend to land (security, correctness, docs) vs. which
-belong in a fork (new features, stack swaps, opinionated refactors).
-If you haven't opened an issue yet for a non-trivial change, consider
-doing that first to check alignment.
+Aviso: esto es una plantilla, no un producto colaborativo. La mayoría de
+los cambios pertenecen a tu fork. Consulta CONTRIBUTING.md para saber qué
+tipos de PR al repositorio original suelen integrarse (seguridad,
+corrección, documentación) y cuáles pertenecen a un fork (funciones
+nuevas, cambios de stack, refactorizaciones opinadas). Si aún no has
+abierto un issue para un cambio no trivial, considera hacerlo primero
+para confirmar que encaja.
 
-Keep this short and specific. The commit message is where the "why"
-lives; this is where the reviewer gets the "what" and "how to try it".
+Mantenlo breve y concreto. El mensaje de commit es donde vive el
+"porqué"; aquí quien revisa obtiene el "qué" y el "cómo probarlo".
 -->
 
-## Summary
+## Resumen
 
-<!-- One or two sentences. What does this PR do? -->
+<!-- Una o dos frases. ¿Qué hace este PR? -->
 
-## What changed
+## Qué cambió
 
-<!-- Bullet list of the actual changes. Link file paths when useful. -->
+<!-- Lista con los cambios reales. Enlaza rutas de archivos cuando sirva. -->
 
-## Test plan
+## Plan de pruebas
 
 <!--
-How did you verify this works? How should the reviewer verify it?
-Tick the boxes as you go.
+¿Cómo verificaste que funciona? ¿Cómo debería verificarlo quien revisa?
+Marca las casillas a medida que avances.
 -->
 
-- [ ] `npm run typecheck` clean.
-- [ ] `npm run lint` — no new errors beyond the pre-existing backlog.
-- [ ] `npm run build` succeeds.
-- [ ] Feature / fix manually exercised in the browser (or the reason it can't be).
+- [ ] `npm run typecheck` sin errores.
+- [ ] `npm run lint` — sin errores nuevos más allá del backlog preexistente.
+- [ ] `npm run build` termina correctamente.
+- [ ] La función / corrección se probó manualmente en el navegador (o el motivo por el que no se pudo).
 
-## Related
+## Relacionado
 
-<!-- Link the issue this closes, or "Part of #N" for multi-PR work. -->
+<!-- Enlaza el issue que cierra, o "Parte de #N" para trabajo en varios PR. -->
 
 <!--
-Heads up:
-- Security issues: do not disclose here; see .github/SECURITY.md.
-- New deps: please justify briefly in the commit message or PR body.
-- Runtime behaviour changes affecting forkers: update docs/*.
+Aviso:
+- Problemas de seguridad: no los divulgues aquí; consulta .github/SECURITY.md.
+- Dependencias nuevas: justifícalas brevemente en el mensaje de commit o en el cuerpo del PR.
+- Cambios de comportamiento en ejecución que afecten a quienes hacen fork: actualiza docs/*.
 -->

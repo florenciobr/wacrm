@@ -1,62 +1,67 @@
-# Security Policy
+# Política de Seguridad
 
-Thanks for taking the time to look into the security of this template.
+Gracias por dedicar tiempo a revisar la seguridad de esta plantilla.
 
-## Reporting a vulnerability
+## Reportar una vulnerabilidad
 
-**Do not open a public GitHub issue for security bugs.** Public issues are
-indexed by search engines and seen by every fork long before the upstream fix
-lands.
+**No abras un issue público en GitHub para errores de seguridad.** Los
+issues públicos son indexados por los buscadores y los ven todos los forks
+mucho antes de que llegue la corrección al repositorio original.
 
-Instead, please report privately via one of:
+En su lugar, repórtalo de forma privada por una de estas vías:
 
 - [GitHub Security Advisories](https://github.com/ArnasDon/wacrm/security/advisories/new)
-  (preferred — keeps the disclosure, fix, and CVE all in one place).
-- Email: `a.donauskas@hostinger.com` with `[CRM template security]` in the subject.
+  (preferida — mantiene la divulgación, la corrección y el CVE en un
+  mismo lugar).
+- Correo: `a.donauskas@hostinger.com` con `[CRM template security]` en el
+  asunto.
 
-Include, if you can:
+Incluye, si puedes:
 
-- A description of the issue and the impact.
-- Reproduction steps or a proof-of-concept.
-- The commit or release you're testing against.
-- Whether you'd like credit in the eventual disclosure (we default to
-  crediting by the name or handle you give us, unless you prefer anonymous).
+- Una descripción del problema y su impacto.
+- Pasos de reproducción o una prueba de concepto.
+- El commit o la versión con la que estás probando.
+- Si quieres recibir crédito en la divulgación final (por defecto damos
+  crédito con el nombre o alias que nos indiques, salvo que prefieras el
+  anonimato).
 
-## What to expect
+## Qué esperar
 
-- **Acknowledgement** within 72 hours.
-- **Initial assessment** (severity, affected versions, whether a workaround
-  exists) within one week.
-- **Fix + coordinated disclosure** on a timeline proportional to severity.
-  Critical issues ship a patch as soon as one's ready; medium issues bundle
-  with the next release.
+- **Acuse de recibo** en un plazo de 72 horas.
+- **Evaluación inicial** (gravedad, versiones afectadas, si existe una
+  solución temporal) en una semana.
+- **Corrección + divulgación coordinada** en un plazo proporcional a la
+  gravedad. Los problemas críticos publican un parche en cuanto esté
+  listo; los de gravedad media se agrupan con la siguiente versión.
 
-## Scope
+## Alcance
 
-In scope:
-- Anything in this repository (`ArnasDon/wacrm`), including webhook and auth
-  flows, token encryption, RLS policies, and the built-in cron endpoints.
-- Default configurations shipped in `docs/` — e.g. if the setup guide leaves
-  an unsafe default.
+Dentro del alcance:
+- Cualquier cosa de este repositorio (`ArnasDon/wacrm`), incluidos los
+  flujos de webhook y autenticación, el cifrado de tokens, las políticas
+  RLS y los endpoints cron integrados.
+- Las configuraciones por defecto incluidas en `docs/` — p. ej., si la
+  guía de configuración deja un valor por defecto inseguro.
 
-Out of scope:
-- Vulnerabilities in Supabase, Next.js, Node.js, or other upstream
-  dependencies — please report those to their maintainers. We'll happily
-  bump versions on request.
-- Issues that require a pre-compromised deployment (e.g. a leaked
-  service-role key) unless they widen the blast radius beyond the initial
-  compromise.
-- Social engineering, physical attacks, or third-party services your fork
-  adds after deploy.
+Fuera del alcance:
+- Vulnerabilidades en Supabase, Next.js, Node.js u otras dependencias
+  ajenas — repórtalas a sus responsables. Con gusto actualizaremos
+  versiones si se solicita.
+- Problemas que requieran un despliegue ya comprometido (p. ej., una
+  clave service-role filtrada), salvo que amplíen el alcance del daño más
+  allá del compromiso inicial.
+- Ingeniería social, ataques físicos o servicios de terceros que tu fork
+  agregue después del despliegue.
 
-## Safe harbor
+## Puerto seguro
 
-Research conducted under this policy is authorized. We won't pursue legal
-action against anyone who:
+La investigación realizada bajo esta política está autorizada. No
+emprenderemos acciones legales contra quien:
 
-- Makes a good-faith effort to avoid data destruction, privacy violations,
-  or service disruption.
-- Gives us reasonable time to respond before any public disclosure.
-- Doesn't exploit the issue beyond what's necessary to demonstrate it.
+- Haga un esfuerzo de buena fe por evitar la destrucción de datos,
+  violaciones de privacidad o interrupciones del servicio.
+- Nos dé un tiempo razonable para responder antes de cualquier
+  divulgación pública.
+- No explote el problema más allá de lo necesario para demostrarlo.
 
-Thanks for helping keep this template (and its forks) safe.
+Gracias por ayudar a mantener segura esta plantilla (y sus forks).

@@ -1,28 +1,29 @@
-# Code of Conduct
+# Código de Conducta
 
-This project adopts the **[Contributor Covenant, version 2.1][covenant]**.
+Este proyecto adopta el **[Contributor Covenant, versión 2.1][covenant]**.
 
-By participating in this project — filing an issue, opening a PR, commenting
-on one, or interacting in any other community space — you agree to uphold
-that standard.
+Al participar en este proyecto — abrir un issue, abrir un PR, comentar en
+uno o interactuar en cualquier otro espacio de la comunidad — aceptas
+respetar ese estándar.
 
-## Reporting
+## Reportes
 
-If you witness or experience behaviour that violates the Code, please
-report it privately to the project maintainer:
+Si presencias o experimentas comportamientos que infrinjan el Código,
+repórtalos de forma privada a la persona responsable del proyecto:
 
-- Email: **a.donauskas@hostinger.com** with `[CRM template conduct]` in
-  the subject.
+- Correo: **a.donauskas@hostinger.com** con `[CRM template conduct]` en
+  el asunto.
 
-Reports are handled confidentially. Expect an acknowledgement within
-72 hours and a decision on next steps within a week.
+Los reportes se tratan de forma confidencial. Espera un acuse de recibo
+en un plazo de 72 horas y una decisión sobre los siguientes pasos en una
+semana.
 
-## Enforcement
+## Aplicación
 
-The maintainer is responsible for enforcement and will apply the community
-impact guidelines described in the [Contributor Covenant][covenant-enforce]
-— ranging from a private correction to a permanent ban, proportional to the
-behaviour.
+La persona responsable del proyecto se encarga de hacer cumplir el Código
+y aplicará las guías de impacto comunitario descritas en el
+[Contributor Covenant][covenant-enforce] — que van desde una corrección
+privada hasta un veto permanente, en proporción a la conducta.
 
 [covenant]: https://www.contributor-covenant.org/version/2/1/code_of_conduct/
 [covenant-enforce]: https://www.contributor-covenant.org/version/2/1/code_of_conduct/#enforcement-guidelines

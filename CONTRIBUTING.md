@@ -1,124 +1,128 @@
-# Using this template
+# Cómo usar esta plantilla
 
-This is a **template repository**, not a collaborative product. The
-expected flow is:
+Este es un **repositorio plantilla**, no un producto colaborativo. El
+flujo esperado es:
 
-1. **Fork** it to your own GitHub account or organisation.
-2. **Deploy** the fork — see [`docs/`](./docs/README.md).
-3. **Customise** your fork. Rebrand, add the features you need, remove
-   the ones you don't, swap hosting, change the schema.
+1. Haz un **fork** a tu propia cuenta u organización de GitHub.
+2. **Despliega** el fork — consulta [`docs/`](./docs/README.md).
+3. **Personaliza** tu fork. Cambia la marca, agrega las funciones que
+   necesites, quita las que no, cambia de hosting, modifica el esquema.
 
-You **don't** need to send changes back upstream. The fact that your
-fork diverges is the whole point — the upstream is deliberately
-opinionated about stack, UX, and scope, and your fork is where those
-opinions become yours.
+**No** necesitas enviar cambios al repositorio original. Que tu fork
+diverja es justamente la idea — el repositorio original es deliberadamente
+opinado en cuanto a stack, UX y alcance, y tu fork es donde esas
+opiniones pasan a ser tuyas.
 
-## Fork and run
+## Haz un fork y ejecútalo
 
 ```bash
-# 1. Fork on GitHub: https://github.com/ArnasDon/wacrm → Fork
-# 2. Clone your fork
-git clone https://github.com/<your-username>/wacrm.git
+# 1. Fork en GitHub: https://github.com/ArnasDon/wacrm → Fork
+# 2. Clona tu fork
+git clone https://github.com/<tu-usuario>/wacrm.git
 cd wacrm
 
-cp .env.local.example .env.local   # fill in Supabase + Meta creds
+cp .env.local.example .env.local   # completa credenciales de Supabase + Meta
 npm install
 npm run dev
 ```
 
-Full setup (Supabase migrations, WhatsApp Business API, deploy) lives in
-[`docs/`](./docs/README.md).
+La configuración completa (migraciones de Supabase, API de WhatsApp
+Business, despliegue) está en [`docs/`](./docs/README.md).
 
-## Keeping your fork up to date
+## Mantener tu fork actualizado
 
-Pull in upstream bug fixes and security patches periodically:
+Incorpora periódicamente las correcciones de errores y parches de
+seguridad del repositorio original:
 
 ```bash
-git remote add upstream https://github.com/ArnasDon/wacrm.git  # once
+git remote add upstream https://github.com/ArnasDon/wacrm.git  # una sola vez
 git fetch upstream
 git checkout main
-git merge upstream/main     # or: git rebase upstream/main
-# Resolve any conflicts (likely in areas you've customised), then push
+git merge upstream/main     # o: git rebase upstream/main
+# Resuelve los conflictos (probablemente en áreas que personalizaste) y luego haz push
 git push origin main
 ```
 
-If you've made heavy local customisations, rebasing can surface
-conflicts every time you pull. Pinning to a specific upstream tag and
-updating on your schedule is a valid alternative.
+Si hiciste muchas personalizaciones locales, hacer rebase puede generar
+conflictos cada vez que actualices. Fijarte a una etiqueta específica del
+repositorio original y actualizar según tu calendario es una alternativa
+válida.
 
-## Reporting bugs in the upstream template
+## Reportar errores en la plantilla original
 
-If you find a bug in the upstream code — not one you introduced in your
-fork — please file it using the
-[bug report](https://github.com/ArnasDon/wacrm/issues/new?template=bug_report.yml)
-template. Including the commit SHA, the runtime (Hostinger / Vercel /
-local / other), and logs will get to a fix fastest.
+Si encuentras un error en el código original — no uno que introdujiste en
+tu fork — por favor repórtalo con la plantilla de
+[reporte de errores](https://github.com/ArnasDon/wacrm/issues/new?template=bug_report.yml).
+Incluir el SHA del commit, el entorno de ejecución (Hostinger / Vercel /
+local / otro) y los logs es lo que más acelera la corrección.
 
-## Reporting security issues
+## Reportar problemas de seguridad
 
-**Do not file security issues publicly.** Follow the private flow in
-[SECURITY.md](./.github/SECURITY.md).
+**No reportes problemas de seguridad de forma pública.** Sigue el proceso
+privado descrito en [SECURITY.md](./.github/SECURITY.md).
 
-## Upstream pull requests
+## Pull requests al repositorio original
 
-Not the primary flow, but welcome in specific cases:
+No es el flujo principal, pero son bienvenidos en casos específicos:
 
-- **Security fixes** — always welcome, please follow SECURITY.md first
-  for disclosure.
-- **Bug fixes** that match upstream intent (crash, correctness,
-  documentation errors, typos) — land quickly.
-- **Small improvements** (accessibility, obvious UX nits) — usually
-  welcome, open an issue first to check alignment.
+- **Correcciones de seguridad** — siempre bienvenidas; sigue primero
+  SECURITY.md para la divulgación.
+- **Correcciones de errores** acordes con la intención original (fallos,
+  corrección funcional, errores de documentación, erratas) — se integran
+  rápido.
+- **Mejoras pequeñas** (accesibilidad, detalles evidentes de UX) —
+  normalmente bienvenidas; abre antes un issue para confirmar que encajan.
 
-Less likely to land:
+Menos probables de integrarse:
 
-- **New features.** The template's scope is intentionally narrow. A
-  "great idea for a CRM" is often a great idea for *your* CRM — i.e.
-  your fork — but would dilute the template for the next forker.
-- **Stack changes** (different ORM, different UI kit, different auth
-  provider). These belong in a fork, not upstream.
-- **Opinionated refactors** without a concrete correctness or
-  performance motivation.
+- **Funciones nuevas.** El alcance de la plantilla es intencionalmente
+  acotado. Una "gran idea para un CRM" suele ser una gran idea para *tu*
+  CRM — es decir, tu fork — pero diluiría la plantilla para el siguiente
+  usuario.
+- **Cambios de stack** (otro ORM, otro kit de UI, otro proveedor de
+  autenticación). Pertenecen a un fork, no al repositorio original.
+- **Refactorizaciones opinadas** sin una motivación concreta de
+  corrección o rendimiento.
 
-If you do send a PR, the usual rules apply:
+Si envías un PR, aplican las reglas habituales:
 
-- Branch off the latest `main` (don't push to a merged branch — commits
-  end up orphaned).
-- Run `npm run typecheck` and `npm run format` locally first.
-- Fill in the PR template, especially the **Test plan**.
-- One logical change per PR.
-- Commit-message first line is imperative + terse; the body explains
-  the *why*, the diff shows the *what*.
+- Crea tu rama desde el `main` más reciente (no hagas push a una rama ya
+  fusionada — los commits quedan huérfanos).
+- Ejecuta localmente `npm run typecheck` y `npm run format` antes.
+- Completa la plantilla del PR, sobre todo el **Plan de pruebas**.
+- Un cambio lógico por PR.
+- La primera línea del mensaje de commit es imperativa y breve; el cuerpo
+  explica el *porqué*, el diff muestra el *qué*.
 
-Expect a review within a few days. PRs opened without an issue may be
-closed — open the issue first to align.
+Espera una revisión en unos pocos días. Los PR abiertos sin un issue
+previo pueden cerrarse — abre primero el issue para alinear.
 
-## If you maintain a public fork
+## Si mantienes un fork público
 
-- Rebrand. The "CRM Template for WhatsApp" name, favicon, and
-  `wacrm.tech` URL belong to the upstream project; please swap them
-  for your own before putting your deployment in front of users.
-- Keep the MIT [`LICENSE`](./LICENSE) file — that's how the template's
-  permissions travel with the code. Attribution in a `README` section
-  is appreciated but not required.
-- You are free to re-license additions to your fork however you like.
+- Cambia la marca. El nombre "CRM Template for WhatsApp", el favicon y la
+  URL `wacrm.tech` pertenecen al proyecto original; por favor reemplázalos
+  por los tuyos antes de poner tu despliegue frente a usuarios.
+- Conserva el archivo [`LICENSE`](./LICENSE) MIT — así es como los
+  permisos de la plantilla viajan con el código. Una mención en una
+  sección del `README` se agradece, pero no es obligatoria.
+- Eres libre de relicenciar las adiciones a tu fork como quieras.
 
-## Dev-loop reference
+## Referencia del ciclo de desarrollo
 
-Even if you never send a PR upstream, these are the scripts you'll use
-in your fork:
+Aunque nunca envíes un PR al repositorio original, estos son los scripts
+que usarás en tu fork:
 
-| Command | What it does |
+| Comando | Qué hace |
 | --- | --- |
-| `npm run dev` | Turbopack dev server on port 3000. |
-| `npm run build` | Production build. Next also runs its own typecheck here. |
-| `npm run typecheck` | `tsc --noEmit`. Fast TS-only pass. |
+| `npm run dev` | Servidor de desarrollo con Turbopack en el puerto 3000. |
+| `npm run build` | Build de producción. Next también ejecuta aquí su propio typecheck. |
+| `npm run typecheck` | `tsc --noEmit`. Pasada rápida solo de TypeScript. |
 | `npm run lint` | ESLint. |
-| `npm run format` | Prettier write. |
-| `npm run format:check` | Prettier in check-only mode. Useful in CI. |
+| `npm run format` | Prettier en modo escritura. |
+| `npm run format:check` | Prettier en modo solo verificación. Útil en CI. |
 
-## Licensing
+## Licencia
 
-This template is MIT ([`LICENSE`](./LICENSE)). Anything you contribute
-upstream is assumed to be MIT too. Your fork's additions are yours to
-license however you like.
+Esta plantilla es MIT ([`LICENSE`](./LICENSE)). Se asume que todo lo que
+aportes al repositorio original también es MIT. Las adiciones de tu fork
+son tuyas para licenciarlas como quieras.

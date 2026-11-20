@@ -1,64 +1,67 @@
-# Auth emails: confirmation and password-reset links
+# Correos de autenticación: enlaces de confirmación y restablecimiento de contraseña
 
-wacrm uses Supabase Auth for sign-up, sign-in and password reset. Two
-of those flows send an email with a link, and the link has to come back
-to **your** deployment. This page explains how the app asks for that,
-what Supabase needs to be told for it to comply, and what the symptoms
-look like when it isn't.
+wacrm usa Supabase Auth para el registro, el inicio de sesión y el
+restablecimiento de contraseña. Dos de esos flujos envían un correo con
+un enlace, y ese enlace tiene que volver a **tu** despliegue. Esta página
+explica cómo lo solicita la app, qué hay que configurar en Supabase para
+que lo respete y cómo se ven los síntomas cuando no lo hace.
 
-## What the app does
+## Qué hace la app
 
-Every emailed link is asked to return to the app's own origin at
-`/auth/callback`, which exchanges the link for a session and then
-forwards to the page the flow needs:
+A cada enlace enviado por correo se le pide que regrese al origen propio
+de la app, en `/auth/callback`, que intercambia el enlace por una sesión y
+luego redirige a la página que necesita el flujo:
 
-| Flow | Started from | Link returns to |
+| Flujo | Se inicia desde | El enlace regresa a |
 |---|---|---|
-| Email confirmation after sign-up | `/signup` | `/auth/callback?next=/dashboard` (or `/join/<token>` when signing up from an invite) |
-| Password reset | `/forgot-password` | `/auth/callback?next=/reset-password` |
+| Confirmación de correo tras el registro | `/signup` | `/auth/callback?next=/dashboard` (o `/join/<token>` al registrarse desde una invitación) |
+| Restablecimiento de contraseña | `/forgot-password` | `/auth/callback?next=/reset-password` |
 
-"The app's own origin" is the origin the browser loaded the page from
-(`window.location.origin`) — `https://crm.example.com` in production,
-`http://localhost:3000` in local dev. No environment variable is
-involved.
+"El origen propio de la app" es el origen desde el que el navegador cargó
+la página (`window.location.origin`) — `https://crm.example.com` en
+producción, `http://localhost:3000` en desarrollo local. No interviene
+ninguna variable de entorno.
 
-`/auth/callback` accepts both link shapes Supabase can produce — the
-default `?code=` (PKCE) and `?token_hash=&type=` from a customised
-template — validates `next` so it can only point at a same-origin path,
-and redirects with a *relative* `Location`, so it works unchanged
-behind Cloudflare Tunnel, nginx, Hostinger, Vercel or any other proxy.
+`/auth/callback` acepta las dos formas de enlace que Supabase puede
+generar — el `?code=` (PKCE) por defecto y `?token_hash=&type=` de una
+plantilla personalizada —, valida `next` para que solo pueda apuntar a
+una ruta del mismo origen y redirige con un `Location` *relativo*, de modo
+que funciona sin cambios detrás de Cloudflare Tunnel, nginx, Hostinger,
+Vercel o cualquier otro proxy.
 
-## What Supabase needs
+## Qué necesita Supabase
 
-Supabase only honours a requested redirect when it matches its
-**Redirect URLs** allow-list. Otherwise it **silently falls back to the
-Site URL**, whose default is `http://localhost:3000`. That fallback is
-the whole story behind "the confirmation link points at localhost".
+Supabase solo respeta una redirección solicitada cuando coincide con su
+lista de permitidos **Redirect URLs**. Si no, **vuelve silenciosamente a
+la Site URL**, cuyo valor por defecto es `http://localhost:3000`. Ese
+retroceso es toda la explicación de "el enlace de confirmación apunta a
+localhost".
 
-### Hosted Supabase (supabase.com)
+### Supabase alojado (supabase.com)
 
 Dashboard → **Authentication → URL Configuration**:
 
-1. **Site URL** — your production origin, e.g. `https://crm.example.com`.
-2. **Redirect URLs** — add a wildcard for every origin the app runs on:
+1. **Site URL** — tu origen de producción, p. ej. `https://crm.example.com`.
+2. **Redirect URLs** — agrega un comodín para cada origen en el que corra
+   la app:
 
    ```text
    https://crm.example.com/**
    http://localhost:3000/**
    ```
 
-   The `/**` matters: the app's redirect carries a path and a query
-   string (`/auth/callback?next=…`), which a bare origin entry does not
-   match.
+   El `/**` es importante: la redirección de la app lleva una ruta y una
+   cadena de consulta (`/auth/callback?next=…`), que una entrada de solo
+   el origen no cubre.
 
-Changes take effect immediately, but an email that was already sent
-keeps the link it was sent with — request a fresh one to test.
+Los cambios surten efecto de inmediato, pero un correo que ya se envió
+conserva el enlace con el que salió — solicita uno nuevo para probar.
 
-### Self-hosted Supabase (Docker)
+### Supabase autoalojado (Docker)
 
-The Studio page under **Authentication → URL Configuration does not
-persist settings** on a self-hosted stack; the auth service (GoTrue)
-reads them from its environment. In the `.env` next to your
+La página de Studio en **Authentication → URL Configuration no guarda los
+ajustes** en una instalación autoalojada; el servicio de autenticación
+(GoTrue) los lee de su entorno. En el `.env` junto a tu
 `docker-compose.yml`:
 
 ```env
@@ -66,16 +69,17 @@ SITE_URL=https://crm.example.com
 ADDITIONAL_REDIRECT_URLS=https://crm.example.com/**,http://localhost:3000/**
 ```
 
-(Older setups name these `GOTRUE_SITE_URL` and `GOTRUE_URI_ALLOW_LIST`.)
-Restart the auth container afterwards. A self-hosted stack whose `.env`
-still has the example `SITE_URL=http://localhost:3000` produces exactly
-the symptom in [issue #595](https://github.com/ArnasDon/wacrm/issues/595).
+(Las configuraciones más antiguas las llaman `GOTRUE_SITE_URL` y
+`GOTRUE_URI_ALLOW_LIST`.) Reinicia después el contenedor de autenticación.
+Una instalación autoalojada cuyo `.env` aún tiene el `SITE_URL=http://localhost:3000`
+de ejemplo produce exactamente el síntoma del
+[issue #595](https://github.com/ArnasDon/wacrm/issues/595).
 
-### Local Supabase CLI (`supabase start`)
+### Supabase CLI local (`supabase start`)
 
-`supabase/config.toml` in this repo exists only for the migration CI
-job and deliberately carries no `[auth]` section. If you run the local
-stack, add:
+El `supabase/config.toml` de este repositorio existe solo para el job de
+CI de migraciones y deliberadamente no incluye una sección `[auth]`. Si
+ejecutas el stack local, agrega:
 
 ```toml
 [auth]
@@ -83,47 +87,47 @@ site_url = "http://localhost:3000"
 additional_redirect_urls = ["http://localhost:3000/**"]
 ```
 
-## Opening the link on another device
+## Abrir el enlace en otro dispositivo
 
-The default flow is PKCE: the browser that *requested* the email holds
-a one-time code verifier in a cookie, and `/auth/callback` needs it to
-complete the exchange. Open the link on a different device or browser
-and the callback lands on `/login` with a message saying the link
-couldn't be used. Two things to know:
+El flujo por defecto es PKCE: el navegador que *solicitó* el correo guarda
+en una cookie un verificador de código de un solo uso, y `/auth/callback`
+lo necesita para completar el intercambio. Si abres el enlace en otro
+dispositivo o navegador, el callback termina en `/login` con un mensaje
+que dice que no se pudo usar el enlace. Dos cosas a tener en cuenta:
 
-- **Email confirmation still succeeded.** Supabase verified the address
-  before redirecting; the user can simply sign in.
-- **Password reset must be finished in the same browser** it was
-  requested from — or request a new link there.
+- **La confirmación del correo sí se completó.** Supabase verificó la
+  dirección antes de redirigir; la persona solo tiene que iniciar sesión.
+- **El restablecimiento de contraseña debe terminarse en el mismo
+  navegador** desde el que se solicitó — o solicita un enlace nuevo ahí.
 
-To make links device-independent, switch the Supabase email templates
-(**Authentication → Email Templates**) to the token-hash form, which
-`/auth/callback` also accepts:
+Para que los enlaces no dependan del dispositivo, cambia las plantillas de
+correo de Supabase (**Authentication → Email Templates**) a la forma con
+token hash, que `/auth/callback` también acepta:
 
 ```html
-<!-- Confirm signup -->
-<a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email&next=/dashboard">Confirm your email</a>
+<!-- Confirmar registro -->
+<a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email&next=/dashboard">Confirma tu correo</a>
 
-<!-- Reset password -->
-<a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password">Reset your password</a>
+<!-- Restablecer contraseña -->
+<a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password">Restablece tu contraseña</a>
 ```
 
-These links are built from the **Site URL**, so that setting must be
-your production origin.
+Estos enlaces se construyen a partir de la **Site URL**, así que ese
+ajuste debe ser tu origen de producción.
 
-## Symptoms → causes
+## Síntomas → causas
 
-| You see | Likely cause |
+| Lo que ves | Causa probable |
 |---|---|
-| Link in the email is `http://localhost:3000…` in production | Site URL still at its default and/or your origin missing from Redirect URLs (see above). On self-hosted: `SITE_URL` in the Docker `.env`. |
-| Link points at the right domain but a 404 | You're on a build older than the one that added `/auth/callback` and `/reset-password`. Update your fork. |
-| `/login` says the link expired | Links are single-use and time-limited (Supabase default: 1 hour for recovery). Request a new one. |
-| `/login` says the link couldn't be used | Opened in a different browser than the one that requested it (PKCE), or already used. See the section above. |
-| Link works on localhost but not through a tunnel/proxy | Should not happen — the callback redirects with a relative `Location`. Check that your proxy forwards the `/auth/callback` path and its query string untouched. |
+| El enlace del correo es `http://localhost:3000…` en producción | La Site URL sigue en su valor por defecto y/o falta tu origen en Redirect URLs (ver arriba). En autoalojado: `SITE_URL` en el `.env` de Docker. |
+| El enlace apunta al dominio correcto pero da 404 | Tienes un build anterior al que agregó `/auth/callback` y `/reset-password`. Actualiza tu fork. |
+| `/login` dice que el enlace expiró | Los enlaces son de un solo uso y tienen tiempo limitado (por defecto en Supabase: 1 hora para recuperación). Solicita uno nuevo. |
+| `/login` dice que no se pudo usar el enlace | Se abrió en un navegador distinto al que lo solicitó (PKCE), o ya se usó. Consulta la sección anterior. |
+| El enlace funciona en localhost pero no a través de un túnel/proxy | No debería pasar — el callback redirige con un `Location` relativo. Verifica que tu proxy reenvíe la ruta `/auth/callback` y su cadena de consulta sin modificar. |
 
-## Related
+## Relacionado
 
-- Invite links (`/join/<token>`) are generated by the app, not by
-  Supabase — see `NEXT_PUBLIC_SITE_URL` and `ALLOWED_INVITE_HOSTS` in
+- Los enlaces de invitación (`/join/<token>`) los genera la app, no
+  Supabase — consulta `NEXT_PUBLIC_SITE_URL` y `ALLOWED_INVITE_HOSTS` en
   `.env.local.example`.
-- Sign-in itself (`/login`) never involves an emailed link.
+- El inicio de sesión (`/login`) nunca involucra un enlace por correo.

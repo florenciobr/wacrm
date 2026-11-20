@@ -1,40 +1,43 @@
-# wacrm MCP server
+# Servidor MCP de wacrm
 
-A [Model Context Protocol](https://modelcontextprotocol.io) server for
-**[wacrm](https://github.com/ArnasDon/wacrm)** — the self-hostable
-WhatsApp CRM. It lets MCP clients (Claude Desktop, Claude Code, Cursor,
-and others) drive your CRM in natural language:
+Un servidor del [Model Context Protocol](https://modelcontextprotocol.io)
+para **[wacrm](https://github.com/ArnasDon/wacrm)** — el CRM de WhatsApp
+autoalojable. Permite que clientes MCP (Claude Desktop, Claude Code,
+Cursor y otros) controlen tu CRM en lenguaje natural:
 
-> "How many conversations are still open?"
-> "Find the contact for +1 415 555 0123 and show the last few messages."
-> "Draft and send an order-update template to Jane."
+> "¿Cuántas conversaciones siguen abiertas?"
+> "Busca el contacto de +1 415 555 0123 y muestra los últimos mensajes."
+> "Redacta y envía una plantilla de actualización de pedido a Jane."
 
-It's a thin wrapper over wacrm's public [`/api/v1`](../docs/public-api.md)
-REST API. All auth, scoping, and rate limiting are enforced by your
-wacrm instance — this server just exposes the API as MCP tools.
+Es un envoltorio delgado sobre la API REST pública
+[`/api/v1`](../docs/public-api.md) de wacrm. Toda la autenticación, el
+acotamiento y el límite de peticiones los aplica tu instancia de wacrm —
+este servidor solo expone la API como herramientas MCP.
 
-## Prerequisites
+## Requisitos previos
 
-1. A running wacrm instance (your own self-hosted deploy).
-2. An API key: in the dashboard go to **Settings → API keys → New API
-   key** and grant only the scopes you need. The key is shown once.
+1. Una instancia de wacrm en ejecución (tu propio despliegue
+   autoalojado).
+2. Una clave de API: en el panel ve a **Ajustes → Claves de API → Nueva
+   clave de API** y otorga solo los scopes que necesites. La clave se
+   muestra una sola vez.
 
-## Install & configure
+## Instalación y configuración
 
-The server reads two required environment variables and two optional
-write guards:
+El servidor lee dos variables de entorno obligatorias y dos protecciones
+de escritura opcionales:
 
-| Variable                  | Required | Purpose                                                        |
-| ------------------------- | -------- | -------------------------------------------------------------- |
-| `WACRM_BASE_URL`          | yes      | Your instance URL, e.g. `https://crm.example.com`              |
-| `WACRM_API_KEY`           | yes      | An API key from the dashboard                                  |
-| `WACRM_ENABLE_WRITES`     | no       | `true` to expose contact writes + message sending             |
-| `WACRM_ENABLE_BROADCASTS` | no       | `true` to expose mass broadcasts (needs `WACRM_ENABLE_WRITES`) |
+| Variable                  | Obligatoria | Propósito                                                          |
+| ------------------------- | ----------- | ------------------------------------------------------------------ |
+| `WACRM_BASE_URL`          | sí          | URL de tu instancia, p. ej. `https://crm.example.com`              |
+| `WACRM_API_KEY`           | sí          | Una clave de API del panel                                         |
+| `WACRM_ENABLE_WRITES`     | no          | `true` para exponer escrituras de contactos + envío de mensajes    |
+| `WACRM_ENABLE_BROADCASTS` | no          | `true` para exponer difusiones masivas (requiere `WACRM_ENABLE_WRITES`) |
 
 ### Claude Desktop / Claude Code / Cursor
 
-Add to your MCP client config (e.g. `claude_desktop_config.json`, or
-`.mcp.json` for Claude Code):
+Agrégalo a la configuración de tu cliente MCP (p. ej.
+`claude_desktop_config.json`, o `.mcp.json` para Claude Code):
 
 ```jsonc
 {
@@ -51,8 +54,9 @@ Add to your MCP client config (e.g. `claude_desktop_config.json`, or
 }
 ```
 
-That configuration is **read-only** — the safe default. To let the
-assistant change data or send messages, add the write guards:
+Esa configuración es de **solo lectura** — el valor seguro por defecto.
+Para que el asistente pueda modificar datos o enviar mensajes, agrega las
+protecciones de escritura:
 
 ```jsonc
 "env": {
@@ -63,52 +67,54 @@ assistant change data or send messages, add the write guards:
 }
 ```
 
-## Tools
+## Herramientas
 
-Read tools are always available. Write and broadcast tools appear only
-when their guard is set.
+Las herramientas de lectura siempre están disponibles. Las de escritura y
+difusión aparecen solo cuando se activa su protección.
 
-| Tool                 | Group     | Scope needed         | What it does                                    |
-| -------------------- | --------- | -------------------- | ----------------------------------------------- |
-| `whoami`             | read      | _(any valid key)_    | Show the account + scopes the key carries       |
-| `list_contacts`      | read      | `contacts:read`      | List/search contacts (paginated)                |
-| `get_contact`        | read      | `contacts:read`      | Read one contact                                |
-| `list_conversations` | read      | `conversations:read` | List conversations, filter by status/contact    |
-| `get_conversation`   | read      | `conversations:read` | Read one conversation                           |
-| `list_messages`      | read      | `messages:read`      | List a conversation's messages                  |
-| `get_broadcast`      | read      | `broadcasts:send`    | Poll a broadcast's delivery status              |
-| `send_message`       | write     | `messages:send`      | Send a WhatsApp message (text/template/media)   |
-| `create_contact`     | write     | `contacts:write`     | Create (find-or-create) a contact               |
-| `update_contact`     | write     | `contacts:write`     | Update a contact / replace its tags             |
-| `send_broadcast`     | broadcast | `broadcasts:send`    | Launch a template broadcast (requires `confirm`)|
+| Herramienta          | Grupo     | Scope necesario      | Qué hace                                         |
+| -------------------- | --------- | -------------------- | ------------------------------------------------ |
+| `whoami`             | lectura   | _(cualquier clave válida)_ | Muestra la cuenta + scopes de la clave     |
+| `list_contacts`      | lectura   | `contacts:read`      | Lista/busca contactos (paginado)                 |
+| `get_contact`        | lectura   | `contacts:read`      | Lee un contacto                                  |
+| `list_conversations` | lectura   | `conversations:read` | Lista conversaciones, filtra por estado/contacto |
+| `get_conversation`   | lectura   | `conversations:read` | Lee una conversación                             |
+| `list_messages`      | lectura   | `messages:read`      | Lista los mensajes de una conversación           |
+| `get_broadcast`      | lectura   | `broadcasts:send`    | Consulta el estado de entrega de una difusión    |
+| `send_message`       | escritura | `messages:send`      | Envía un mensaje de WhatsApp (texto/plantilla/medio) |
+| `create_contact`     | escritura | `contacts:write`     | Crea (busca o crea) un contacto                  |
+| `update_contact`     | escritura | `contacts:write`     | Actualiza un contacto / reemplaza sus etiquetas  |
+| `send_broadcast`     | difusión  | `broadcasts:send`    | Lanza una difusión con plantilla (requiere `confirm`) |
 
-## Safety model
+## Modelo de seguridad
 
-Sending WhatsApp messages through an LLM is a real-world side effect, so
-the server layers three guards:
+Enviar mensajes de WhatsApp a través de un LLM es un efecto secundario en
+el mundo real, así que el servidor aplica tres protecciones en capas:
 
-1. **Read-only by default.** Write and broadcast tools are not even
-   registered — the model can't see them — unless you opt in via
-   `WACRM_ENABLE_WRITES` / `WACRM_ENABLE_BROADCASTS`.
-2. **API-key scopes.** Whatever the guards allow, your wacrm instance
-   still enforces the key's scopes. A call without the right scope
-   returns a clean `forbidden` error. Issue a read-only key for a
-   read-only assistant.
-3. **Explicit broadcast confirmation.** `send_broadcast` refuses to run
-   unless called with `confirm: true`, and is marked `destructive` so
-   compliant clients prompt the user first.
+1. **Solo lectura por defecto.** Las herramientas de escritura y difusión
+   ni siquiera se registran — el modelo no puede verlas — salvo que las
+   habilites con `WACRM_ENABLE_WRITES` / `WACRM_ENABLE_BROADCASTS`.
+2. **Scopes de la clave de API.** Sea lo que sea lo que permitan las
+   protecciones, tu instancia de wacrm sigue aplicando los scopes de la
+   clave. Una llamada sin el scope adecuado devuelve un error `forbidden`
+   limpio. Emite una clave de solo lectura para un asistente de solo
+   lectura.
+3. **Confirmación explícita de difusión.** `send_broadcast` se niega a
+   ejecutarse a menos que se llame con `confirm: true`, y está marcada
+   como `destructive` para que los clientes compatibles pidan antes
+   confirmación a la persona.
 
-## Development
+## Desarrollo
 
 ```bash
 npm install
-npm run build      # compile to dist/
+npm run build      # compila a dist/
 npm run typecheck
-npm start          # run the compiled server (needs the env vars)
+npm start          # ejecuta el servidor compilado (requiere las variables de entorno)
 ```
 
-Logs go to **stderr** — stdout is reserved for the MCP protocol.
+Los logs van a **stderr** — stdout está reservado para el protocolo MCP.
 
-## License
+## Licencia
 
-MIT — same as wacrm.
+MIT — igual que wacrm.
